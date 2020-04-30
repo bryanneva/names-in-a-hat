@@ -15,7 +15,7 @@ class Names {
 	}
 
 	remove(i) {
-		this.names.splice(i,1)
+		this.names.splice(i,1);
 		this.updateListeners(this.names);
 	}
 
@@ -115,4 +115,5 @@ document.addEventListener("DOMContentLoaded", function() {
   		names.shuffle();
   	});
 
+  	names.shuffle();
 });
