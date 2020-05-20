@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>People Orderer</title>
+    <title>People Orderer</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
 <form id="name-form">
-	<fieldset>
-		<label for="name">Name</label>
-		<input type="text" name="name" id="name">
-	</fieldset>
-	<input type="submit" name="submit">
+    <fieldset>
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
+    </fieldset>
+    <input type="submit" name="submit">
 </form>
 
 <button id="shuffle-button">Shuffle</button>
 <ol id='name-list'></ol>
+
+<section class="copy-area-container">
+    <button id="copy-button">Copy</button>
+    <textarea id="copy-area"></textarea>
+</section>
+
 <script type="text/javascript" src="./index.js"></script>
 </body>
 </html>
