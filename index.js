@@ -1,3 +1,38 @@
+// From https://stackoverflow.com/a/47203743
+if (Uint8Array && window.crypto && window.crypto.getRandomValues) {
+    Array.prototype.shuffle = function() {
+        var n = this.length;
+    
+        // If array has <2 items, there is nothing to do
+        if (n < 2) return this;
+        // Reject arrays with >= 2**31 items
+        if (n > 0x7fffffff) throw "ArrayTooLong";
+    
+        var i, j, r=n*2, tmp, mask;
+        // Fetch (2*length) random values
+        var rnd_words = new Uint32Array(r);
+        // Create a mask to filter these values
+        for (i=n, mask=0; i; i>>=1) mask = (mask << 1) | 1;
+    
+        // Perform Fisher-Yates shuffle
+        for (i=n-1; i>0; i--) {
+            if ((i & (i+1)) == 0) mask >>= 1;
+            do {
+                if (r == n*2) {
+                    // Refresh random values if all used up
+                    window.crypto.getRandomValues(rnd_words);
+                    r = 0;
+                }
+                j = rnd_words[r++] & mask;
+            } while (j > i);
+            tmp = this[i];
+            this[i] = this[j];
+            this[j] = tmp;
+        }
+        return this;
+    }
+} else throw "Unsupported";
+
 const names = [];
 
 
@@ -37,7 +72,12 @@ class Names {
             const j = Math.floor(Math.random() * (i + 1));
             [this.names[i], this.names[j]] = [this.names[j], this.names[i]];
         }
+        
+        this.updateListeners();
+    }
 
+    cryptoShuffle() {
+        this.names.shuffle()
         this.updateListeners();
     }
 }
@@ -139,10 +179,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const shuffleButton = document.getElementById('shuffle-button');
     shuffleButton.addEventListener('click', () => {
-        names.shuffle();
+        names.cryptoShuffle();
     });
 
-    names.shuffle();
+    names.cryptoShuffle();
 
     const copyButton = document.getElementById('copy-button');
     copyButton.addEventListener('click', () => {
